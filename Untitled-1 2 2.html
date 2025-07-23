@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>正在打开 App...</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .btn {
+      background: #007aff;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .tips {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>即将打开 App</h2>
+  <a class="btn" onclick="openApp()">点击打开 App</a>
+  <div class="tips">如未自动跳转，请点击上方按钮<br>如未安装 App 将跳转至下载页面</div>
+
+  <script>
+    function isAndroid() {
+      return /android/i.test(navigator.userAgent);
+    }
+
+    function isIOS() {
+      return /iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
+
+    function openApp() {
+      const schemeUrl = 'youxiake://productlist?url=around'; // 你的 Scheme URL
+      const downloadUrl = isIOS()
+        ? 'https://apps.apple.com/app/id525248747' // iOS App Store 地址
+        : 'https://yourdomain.com/download.apk';  // Android 下载地址
+
+      const now = Date.now();
+      const ifr = document.createElement('iframe');
+      ifr.src = schemeUrl;
+      ifr.style.display = 'none';
+      document.body.appendChild(ifr);
+
+      // 2 秒后跳转下载页（如果没唤起 App）
+      setTimeout(() => {
+        if (Date.now() - now < 2500) {
+          window.location.href = downloadUrl;
+        }
+      }, 2000);
+    }
+
+    // 自动尝试打开 App
+    setTimeout(openApp, 500);
+  </script>
+</body>
+
+</html>
