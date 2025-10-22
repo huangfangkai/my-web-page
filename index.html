@@ -39,9 +39,7 @@
     (async function loadFont() {
       try {
         const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const fontURL = isIOS
-          ? 'yxkfont:///xinyiguanheitir.ttf' // iOS WKWebView handler
-          : 'https://yourserver.com/fonts/xinyiguanheitir.ttf'; // 其他平台网络字体
+        const fontURL = 'yxkfont:///xinyiguanheitir.ttf'; // 其他平台网络字体
 
         const resp = await fetch(fontURL);
         if (!resp.ok) throw new Error('字体加载失败：' + resp.status);
