@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <title>字体注入示例</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- 如果有 CSP，请确保放行 yxkfont -->
-  <meta http-equiv="Content-Security-Policy" content="font-src 'self' https: yxkfont: blob:;">
+  <meta http-equiv="Content-Security-Policy" content="font-src 'self' https://*.vercel.app blob:;">
   <style>
     body {
       padding: 20px;
     }
+
     .family__xinyiguanheitir--ios {
       font-family: 'xinyiguanheitir', sans-serif !important;
     }
-    font, h1, h2, p {
+
+    font,
+    h1,
+    h2,
+    p {
       font-family: 'xinyiguanheitir', sans-serif !important;
     }
   </style>
 </head>
+
 <body>
 
   <p class="family__xinyiguanheitir--ios">这是字体测试文字</p>
@@ -38,8 +44,8 @@
   <script>
     (async function loadFont() {
       try {
-        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const fontURL = 'yxkfont:///xinyiguanheitir.ttf'; // 其他平台网络字体
+        // iOS 直接走 HTTPS 字体
+        const fontURL = './fonts/xinyiguanheitir.ttf';
 
         const resp = await fetch(fontURL);
         if (!resp.ok) throw new Error('字体加载失败：' + resp.status);
@@ -71,4 +77,5 @@
   </script>
 
 </body>
+
 </html>
