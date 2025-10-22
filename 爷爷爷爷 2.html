@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>字体注入示例</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 如果有 CSP，请确保放行 yxkfont -->
+  <meta http-equiv="Content-Security-Policy" content="font-src 'self' https: yxkfont: blob:;">
+  <style>
+    body {
+      padding: 20px;
+    }
+    .family__xinyiguanheitir--ios {
+      font-family: 'xinyiguanheitir', sans-serif !important;
+    }
+    font, h1, h2, p {
+      font-family: 'xinyiguanheitir', sans-serif !important;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="family__xinyiguanheitir--ios">这是字体测试文字</p>
+
+  <div id="html-content">
+    <font size="13" color="#666666">上传了 </font>
+    <font size="13" color="#FD410D">5</font>
+    <font size="13" color="#666666"> 张出行照片</font>
+    <h1>回乡偶书(二首)</h1>
+    <h2>其一</h2>
+    <h2>贺知章</h2>
+    <p>少小离家老大回</p>
+    <p>乡音无改鬓毛衰</p>
+    <p>儿童相见不相识</p>
+    <p>笑问客从何处来</p>
+  </div>
+
+  <script>
+    (async function loadFont() {
+      try {
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const fontURL = isIOS
+          ? 'yxkfont:///xinyiguanheitir.ttf' // iOS WKWebView handler
+          : 'https://yourserver.com/fonts/xinyiguanheitir.ttf'; // 其他平台网络字体
+
+        const resp = await fetch(fontURL);
+        if (!resp.ok) throw new Error('字体加载失败：' + resp.status);
+
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+
+        const style = document.createElement('style');
+        style.textContent = `
+          @font-face {
+            font-family: 'xinyiguanheitir';
+            src: url('${url}') format('truetype');
+            font-display: swap;
+          }
+          .family__xinyiguanheitir--ios {
+            font-family: 'xinyiguanheitir', sans-serif !important;
+          }
+          font, h1, h2, p {
+            font-family: 'xinyiguanheitir', sans-serif !important;
+          }
+        `;
+        document.head.appendChild(style);
+
+        console.log('✅ 字体已成功注入:', url);
+      } catch (err) {
+        console.error('❌ 字体加载失败:', err);
+      }
+    })();
+  </script>
+
+</body>
+</html>
