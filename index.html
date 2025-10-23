@@ -1,26 +1,51 @@
-<html> <head></head> <body></body> </html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>字体注入测试</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSP 放行 yxkfont 与 blob -->
+  <meta http-equiv="Content-Security-Policy" content="font-src 'self' https: yxkfont: blob:;">
 
-
-
-<html>
+  <style>
+    .family__xinyiguanheitir--ios {
+      font-family: 'xinyiguanheitir', sans-serif !important;
+    }
+  </style>
+</head>
 <body>
-    <font size=\"13\" color='#666666'>上传了 </font>
-    <font size=\"13\" color='#FD410D'>5</font>
-    <font size=\"13\" color='#666666'> 张出行照片</font>
+  <p class="family__xinyiguanheitir--ios">字体测试文字</p>
+
+  <script>
+    // ✅ 使用 DOMContentLoaded 确保文档加载完
+    document.addEventListener('DOMContentLoaded', async function () {
+      console.log('📦 页面加载完成，准备加载字体');
+
+      try {
+        const fontURL = 'yxkfont:///xinyiguanheitir.ttf';
+
+        // ✅ fetch 包装，防止 WKWebView 异步丢失
+        const resp = await Promise.resolve(fetch(fontURL));
+        if (!resp.ok) throw new Error('字体加载失败：' + resp.status);
+
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+
+        const style = document.createElement('style');
+        style.textContent = `
+          @font-face {
+            font-family: 'xinyiguanheitir';
+            src: url('${url}') format('truetype');
+            font-display: swap;
+          }
+        `;
+        document.head.appendChild(style);
+
+        console.log('✅ 字体成功注入:', url);
+      } catch (err) {
+        console.error('❌ 字体加载失败:', err);
+      }
+    });
+  </script>
 </body>
 </html>
-
-
-
-
-
-<h1>回乡偶书(二首)</h1>
-<h2>其一</h2>
-<h2>贺知章</h2>
-<p>少小离家老大回</p>
-<p>乡音无改鬓毛衰</p>
-<p>儿童相见不相识</p>
-<p>笑问客从何处来</p>
-
-
-
