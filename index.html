@@ -5,7 +5,7 @@
   <title>字体注入测试</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- CSP 放行 yxkfont 与 blob -->
-  <meta http-equiv="Content-Security-Policy" content="font-src 'self' https: yxkfont: blob:;">
+  <!-- <meta http-equiv="Content-Security-Policy" content="font-src 'self' https: yxkfont: blob:;"> -->
 
   <style>
     .family__xinyiguanheitir--ios {
@@ -22,7 +22,7 @@
       console.log('📦 页面加载完成，准备加载字体');
 
       try {
-        const fontURL = 'yxkfont:///xinyiguanheitir.ttf';
+        const fontURL = 'https://font/xinyiguanheitir.ttf';
 
         // ✅ fetch 包装，防止 WKWebView 异步丢失
         const resp = await Promise.resolve(fetch(fontURL));
